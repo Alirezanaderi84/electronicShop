@@ -1,0 +1,22 @@
+<%- include('../includes/head.ejs') %> 
+<%- include('../includes/heading.ejs') %>
+
+  <main> 
+    <br>
+    <div class="text-center">
+      <h2><%= product.title %></h2>
+    </div>
+    <div class="text-center">
+      <p><%= product.description %></p>
+    </div>
+    <div class="text-center">
+      <h2><%= product.price.toLocaleString('fa-IR')%> تومان  </h2>
+    </div>
+  </div>
+  <div class="container">
+    <div class="text-center">
+      <img style="max-width: 250px;max-height: 260px;border-radius: 10%;"  src="<%= product.imageUrl %>" alt="<%= product.title %>">
+    </div>
+</main>
+
+<%- include('../includes/end.ejs') %>

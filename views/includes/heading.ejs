@@ -1,0 +1,52 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm mb-4">
+    <div class="container">
+        <a style="padding-right: 0;" class="navbar-brand" href="/">ELECTRONIC SHOP</a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link <%= path==='/' ? 'active' : ' ' %> " href="/">فروشگاه</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link  <%= path==='/products' ? 'active' : ' ' %> "" href=" /products">محصولات</a>
+                </li>
+
+                <% if (isAuthenticateed) { %>
+                    <li class="nav-item">
+                        <a class="nav-link <%= path==='/cart' ? 'active' : ' ' %> " href="/cart">سبد خرید</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link <%= path==='/orders' ? 'active' : ' ' %> " href="/orders">سفارشات</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link  <%= path==='/admin/add-product' ? 'active' : ' ' %> "
+                            href="/admin/addProduct">افزودن محصول</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link  <%= path==='/admin/product' ? 'active' : ' ' %>    "
+                            href="/admin/products">محصولات ادمین</a>
+                    </li>
+                    <% } %>
+
+
+            </ul>
+        </div>
+        <% if (!isAuthenticateed) { %>
+            <a style="margin-left: 10px;" class=" btn btn-outline-success" <%=path==='/' ? 'active' : ' ' %> "
+                href="/login">ورود</a>
+            <a style="margin-left: 10px;" class=" btn btn-outline-success" <%=path==='/' ? 'active' : ' ' %> "
+                href="/signup">ثبت نام</a>
+            <% }else{ %>
+
+                <form action="/logout" method="post">
+                    <button class="btn btn-outline-primary" type="submit">
+                        خروج </button>
+                </form>
+                <% } %>
+
+    </div>
+</nav>

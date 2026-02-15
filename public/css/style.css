@@ -1,0 +1,111 @@
+/* تنظیمات فونت و ظاهر کلی */
+body {
+    font-family: 'Tahoma', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f7f6;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* استایل نوار ناوبری */
+.navbar {
+    border-bottom: 2px solid #0d6efd;
+}
+
+.navbar-brand {
+    margin: 10px;
+    font-weight: 1000;
+    letter-spacing: -1px;
+    color: #0d6efd !important;
+}
+
+/* در فایل product.css این مقادیر را حذف یا به auto تغییر دهید */
+.product-item {
+    width: auto; /* تغییر از 20rem به auto برای هماهنگی با گرید */
+    max-width: 100%;
+    margin: 0;
+}
+/* استایل کارت‌های محصول */
+.product-card {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease-in-out;
+}
+
+.product-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+}
+
+.product-card img {
+    width: 100%;
+    height: 250px; /* ارتفاع ثابت برای یکدست شدن کارت‌ها */
+    object-fit: contain; /* برای نمایش کامل عکس گوشی‌ها بدون برش خوردن */
+    padding: 10px;
+    background-color: #f8f9fa;
+}
+
+/* استایل قیمت و دکمه‌ها */
+.price-tag {
+    font-size: 1.1rem;
+    color: #2c3e50;
+}
+
+.btn-add-cart {
+    border-radius: 8px;
+    padding: 5px 15px;
+    font-weight: bold;
+}
+
+
+/* فوتر */
+footer {
+    background-color: #fff;
+    margin-top: 50px;
+    padding: 20px 0;
+    font-size: 0.9rem;
+}
+/* متمایز کردن لینک فعال */
+.navbar-nav .nav-link.active {
+    color: #0d6efd !important;
+    /* font-weight: 700; */
+    position: relative;
+}
+
+/* اضافه کردن یک خط کوچک زیر لینک فعال */
+.navbar-nav .nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 10%;
+    right: 10%;
+    height: 2px;
+    background-color: #0d6efd;
+    border-radius: 2px;
+}
+
+/* افکت هاور برای لینک‌های ناوبری */
+.nav-link {
+    transition: color 0.2s ease-in-out;
+    margin: 0 5px;
+}
+
+.nav-link:hover {
+    color: #0d6efd !important;
+}
+
+/* استایل بخش مدیریت */
+.admin-section {
+    border-color: #dee2e6 !important;
+}
+
+/* بهبود دکمه‌های خرید در کارت محصول */
+.btn-outline-success {
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-success:hover {
+    transform: scale(1.05);
+}

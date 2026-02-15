@@ -1,0 +1,80 @@
+const express = require('express')
+const path = require('path')
+const bodyParser = require('body-parser')
+const mongoose = require('mongoose')
+const session = require('express-session')
+const MongoDBstore = require('connect-mongo').default
+const flash=require('connect-flash')
+const PORT = 3001
+const MongoDBuri = 'mongodb://localhost/electronicalShop'
+const User = require('./models/user')
+const app = express()
+app.set("view engine", "ejs")
+app.set("views", "views")
+
+const adminRouter = require('./routers/admin')
+const shopRouter = require('./routers/shop')
+const authRouter = require('./routers/auth')
+const errorController=require('./controllers/error500')
+
+
+app.use(bodyParser.urlencoded({
+  extended: false
+}))
+app.use(session({
+  secret: 'my secret session is this ',
+  resave: false,
+  saveUninitialized: false,
+  store: MongoDBstore.create({
+    mongoUrl: MongoDBuri,
+
+  })
+}))
+
+app.use(express.static(path.join(__dirname, "public")))
+app.use((req, res, next) => {
+  if (!req.session.user) {
+    return next()
+  }
+  User.findById(req.session.user._id).then(user => {
+    if(!user){
+      return next()
+    }
+    req.user = user,
+      next()
+  }).catch(err => {
+   throw new Error(err)
+  })
+
+})
+app.use(flash())
+app.use('/admin', adminRouter)
+app.use(shopRouter)
+app.use(authRouter)
+app.get('/500',errorController.error500)
+app.use((error,req,res,next)=>{
+  // res.status(error.httpStatusCode)
+  res.status(500).render('500',{
+        pageTitle:'Error',
+        path:'/500',
+        isAuthenticateed:req.session.isLoggedIn
+    })
+})
+
+
+
+
+mongoose.connect(MongoDBuri).then(result => {
+  
+
+  app.listen(PORT, () => {
+    console.log(`runinig on port ${PORT}`)
+  })
+}
+).catch(err => console.log(err))
+
+
+
+
+
+

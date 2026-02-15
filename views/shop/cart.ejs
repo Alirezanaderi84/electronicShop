@@ -1,0 +1,43 @@
+<%- include('../includes/head.ejs') %>
+    <%- include('../includes/heading.ejs') %>
+        <main>
+            <% if(products.length>0){ %>
+                <ul class="cart__item-list">
+                    <% products.forEach(p=> { %>
+                        <li class="cart__item">
+                            <div>
+                                <img src="<%= p.productId.imageUrl %>" class="img-thumbnail" alt="" />
+                            </div>
+                            <h1 class="fw-bold">
+                                <%= p.productId.title %>
+                            </h1>
+                            <h2 class="text-primary">
+                                تعداد: <%= p.quantity %>
+                            </h2>
+                            <form action="/addquantity" method="post">
+                                <button type="submit" class="btn btn-primary">افزایش تعداد</button>
+                                <input type="hidden" name="productId" value="<%= p.productId._id %>">
+                            </form>
+                            <form action="/cartDelete" method="post">
+                                <button type="submit" class="btn btn-danger">حذف</button>
+                                <input type="hidden" name="productId" value="<%= p.productId._id %>">
+                            </form>
+                        </li>
+                        <% }) %>
+                </ul>
+
+              
+                        <div class="row">
+                            <div class="container">
+                                <div class="text-center">
+                                    <form action="createOrder" method="post">
+                                        <button type="submit" class="btn btn-info">سفارش محصولات</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                          <% }else{ %>
+                    <h1 style="font-size: x-large; padding-right: 10px;">سبد خرید خالی است!</h1>
+                    <% } %>
+        </main>
+        <%- include('../includes/end.ejs') %>

@@ -1,0 +1,38 @@
+<%- include('../includes/head.ejs') %>
+  <%- include('../includes/heading.ejs') %>
+    <div class="container">
+      <div class="row g-4">
+        <% if (prods.length> 0) { %>
+          <% for (let product of prods) { %>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+              <article class="card h-100 shadow-sm product-card">
+                <img src="<%= product.imageUrl %>" class="card-img-top" alt="<%= product.title %>">
+                <div class="card-body d-flex flex-column">
+                  <h6 class="card-title fw-bold text-center">
+                    <%= product.title %>
+                  </h6>
+                  <p class="text-muted small text-center flex-grow-1">
+                    <%= product.description %>
+                  </p>
+                  <span class="price-tag fw-bold text-primary text-center ">
+                    <%= product.price.toLocaleString('fa-IR') %> تومان
+                  </span>
+                  <br>
+                  <div class="text-center">
+                    
+                    <form action="/admin/deleteProducts" method="post">
+                      <a href="/admin/editProducts/<%= product._id %>?edit=true" class="btn btn-primary">ویرایش</a>
+                      <input type="hidden" name="productId" value="<%= product._id %>">
+                      <button class="btn btn-danger" type="submit">حذف</button>
+                    </form>
+                  </div>
+                </div>
+              </article>
+            </div>
+            <% } %>
+              <% } else { %>
+                <h1>محصولی پیدا نشد!</h1>
+                <% } %>
+      </div>
+    </div>
+    <%- include('../includes/end.ejs') %>

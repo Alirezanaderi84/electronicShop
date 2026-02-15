@@ -1,0 +1,51 @@
+<%- include('../includes/head.ejs') %>
+    <section class="vh-100" style="background-color: #508bfc">
+        <div class="container py-5 h-100">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                    <div class="card shadow-2-strong" style="border-radius: 1rem">
+                        <% if(errorMessage[0]){ %>
+                            <div class="alert alert-danger text-center" role="alert">
+                                <%= errorMessage %>
+                            </div>
+                            <% } %>
+                                <div class="card-body p-5 text-center">
+                                    <h3 class="mb-5">ثبت نام</h3>
+
+                                    <form action="/signup" method="post" novalidate>
+
+                                        <div class="form-outline mb-4">
+                                            <input type="email" name="email" id="typeEmailX-2" 
+                                                class="form-control form-control-lg <%= validationError.find(e => e.path ==='email' ) ? 'border border-danger' : '' %>" 
+                                                style="direction: rtl;"
+                                                placeholder="نام کاربری یا ایمیل خود را وارد کنید"
+                                                value="<%=oldValue.email%>">
+                                                
+                                        </div>
+
+                                        <div class="form-outline mb-4">
+                                            <input type="password" name="password" id="typePasswordX-2" 
+                                                class="form-control form-control-lg <%= validationError.find(e => e.path ==='password' ) ? 'border border-danger' : '' %>"
+                                                placeholder="رمز عبور را وارد کنید"
+                                                value="<%=oldValue.password %>">
+                                                
+                                        </div>
+                                        <div class="form-outline mb-4">
+                                            <input type="password" name="confirmpass" id="typePasswordX-2" value="<%= oldValue.confirmpass %>"
+                                                class="form-control form-control-lg <%= validationError.find(e => e.path ==='confirmpass' ) ? 'border border-danger' : '' %>" placeholder="تکرار رمز عبور">
+                                        </div>
+
+                                        <button class="btn btn-success btn-lg  w-100" type="submit">
+                                            ثبت نام </button>
+
+
+                                    </form>
+
+                                </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <%- include('../includes/end.ejs') %>
