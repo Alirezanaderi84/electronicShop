@@ -5,9 +5,10 @@
                 <ul style="list-style-type: none; ">
                     <% orders.forEach(order=>{ %>
                         <li style="box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    border: none;
-    border-radius: 12px;;">
+                                           border: none;
+                                             border-radius: 12px;;">
                             <h5 class="fw text-center">سفارش :<%= order._id %>
+                                <a style="margin-right: 10px;" href="/invoices/<%=order._id  %>">دریافت گزارش</a>
                             </h5>
                             <ul class="cart__item-list">
                                 <% order.products.forEach(p=>{ %>
@@ -16,8 +17,9 @@
                                             <%= p.product.title %>
                                         </h1>
                                         <h2 class="text-primary">
-                                            تعداد: <%= p.quantity %>
+                                            تعداد: <%= p.quantity %> 
                                         </h2>
+                                        
                                     </li>
                                     <% }) %>
                             </ul>

@@ -11,4 +11,5 @@ router.post('/cartDelete', isAuth,shopController.postCartDeleteProducts)
 router.post('/createOrder', isAuth,shopController.postOrder)
 router.get('/orders', isAuth,shopController.getOrder)
 router.post('/addquantity', isAuth,shopController.addQuantityCart)
+router.get('/invoices/:orderId',isAuth,shopController.getInvoices)
 module.exports = router

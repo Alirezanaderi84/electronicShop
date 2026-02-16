@@ -2,7 +2,7 @@
   <%- include('../includes/heading.ejs') %>
     <main dir="rtl">
       <div class="container">
-        <form action="/admin/<% if(editing){ %>editProducts<% }else{ %>addProduct<% } %>" method="post">
+        <form action="/admin/<% if(editing){ %>editProducts<% }else{ %>addProduct<% } %>" method="post" enctype="multipart/form-data">
           <div class="form-group">
              <% if(hasErorr) {%>
               <% if(errorMessage[0]){ %>
@@ -23,8 +23,8 @@
           </div>
           <div class="form-group">
             <label for="title">آدرس عکس</label>
-            <input type="text" class="form-control <%= validationError.find(e => e.path ==='imageUrl' ) ? 'border border-danger' : '' %>" id="imageUrl" name="imageUrl" placeholder="عکس محصول را وارد کنید"
-              value="<% if(editing || hasErorr){  %><%= product.imageUrl %><% } %>" />
+            <input type="file" class="form-control" id="image" name="image" placeholder="عکس محصول را وارد کنید"
+          />
           </div>
           <div class="form-group">
             <label for="title">توضیحات</label>
