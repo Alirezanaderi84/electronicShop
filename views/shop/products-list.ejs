@@ -30,6 +30,9 @@
               <% } else { %>
                 <h1>محصولی پیدا نشد!</h1>
                 <% } %>
+                <%- include('../includes/pagination.ejs',{hasPreviousPage:hasPreviousPage,PreviousPage:PreviousPage,currentPage:currentPage
+                  ,lastPage:lastPage,hasNextPage:hasNextPage,nextPage:nextPage,
+                 }) %>
       </div>
     </div>
     <%- include('../includes/end.ejs') %>

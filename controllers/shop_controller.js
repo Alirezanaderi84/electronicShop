@@ -5,21 +5,38 @@ const parseCookies = require('../util/cookieParser')
 const path = require('path')
 const fs = require('fs')
 const pdfDocument = require('pdfkit')
-exports.getIndex = (req, res) => {
+const ITEMS_PER_PAGE = 8
 
-    Product.find().then(products => {
-        res.render('shop/index', {
-            path: "/",
-            pageTitle: "فروشگاه ما",
-            prods: products,
-            isAuthenticateed: req.session.isLoggedIn,
+exports.getIndex = (req, res) => {
+    const page = +req.query.page || 1
+    let totalItems
+    product.countDocuments().then(productNumber => {
+        totalItems = productNumber
+     return Product.find().skip((page - 1) * ITEMS_PER_PAGE)
+            .limit(ITEMS_PER_PAGE)
+
+    })
+        .then(products => {
+            res.render('shop/index', {
+                path: "/",
+                pageTitle: "فروشگاه ما",
+                prods: products,
+                isAuthenticateed: req.session.isLoggedIn,
+                currentPage:page,
+                totalProducts:totalItems,
+                hasNextPage:ITEMS_PER_PAGE * page < totalItems,
+                hasPreviousPage:page>1,
+                nextPage:page+1,
+                PreviousPage:page-1,
+                lastPage:Math.ceil(totalItems/ITEMS_PER_PAGE)
+
+            })
+        }).catch(err => {
+            const error = new Error(err)
+            error.httpStatusCode = 500
+            return next(error)
 
         })
-    }).catch(err => {
-        const error = new Error(err)
-        error.httpStatusCode = 500
-        return next(error)
-    })
 
 
 }
@@ -42,13 +59,29 @@ exports.getProductDeatail = (req, res) => {
 }
 exports.getProducts = (req, res) => {
 
-    product.find().then(products => {
-        res.render('shop/products-list', {
-            prods: products,
-            pageTitle: "محصولات",
-            path: '/products',
-            isAuthenticateed: req.session.isLoggedIn
-        })
+  const page = +req.query.page || 1
+    let totalItems
+    product.countDocuments().then(productNumber => {
+        totalItems = productNumber
+     return Product.find().skip((page - 1) * ITEMS_PER_PAGE)
+            .limit(ITEMS_PER_PAGE)
+
+    })
+        .then(products => {
+            res.render('shop/products-list', {
+                path: "/",
+                pageTitle: "فروشگاه ما",
+                prods: products,
+                isAuthenticateed: req.session.isLoggedIn,
+                currentPage:page,
+                totalProducts:totalItems,
+                hasNextPage:ITEMS_PER_PAGE * page < totalItems,
+                hasPreviousPage:page>1,
+                nextPage:page+1,
+                PreviousPage:page-1,
+                lastPage:Math.ceil(totalItems/ITEMS_PER_PAGE)
+
+            })
     }).catch(err => {
         const error = new Error(err)
         error.httpStatusCode = 500
@@ -188,63 +221,63 @@ exports.getInvoices = (req, res, next) => {
         // }
         // )
 
-       
+
         // pdfDoc.end()
 
 
-const pdfDoc = new pdfDocument({ margin: 50 });
+        const pdfDoc = new pdfDocument({ margin: 50 });
 
-res.setHeader('Content-Type', 'application/pdf');
-res.setHeader(
-    'Content-Disposition',
-    'attachment; filename="' + invoicesName + '"'
-);
-
-// اگر میخوای هم فایل ذخیره شه هم دانلود بشه
-pdfDoc.pipe(fs.createWriteStream(invoicesPath));
-pdfDoc.pipe(res);
-
-// ===== Title =====
-pdfDoc
-    .fontSize(24)
-    .text('Invoice', {
-        align: 'center',
-        underline: true
-    });
-
-pdfDoc.moveDown();
-pdfDoc.text('----------------------------------------');
-pdfDoc.moveDown();
-
-let totalPrice = 0;
-
-// ===== Products =====
-order.products.forEach(p => {
-
-    const itemTotal = p.quantity * p.product.price;
-    totalPrice += itemTotal;
-
-    pdfDoc
-        .fontSize(14)
-        .text(
-            `${p.product.title} - ${p.quantity} x $${p.product.price} = $${itemTotal}`
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader(
+            'Content-Disposition',
+            'attachment; filename="' + invoicesName + '"'
         );
 
-    pdfDoc.moveDown(0.5);
-});
+        // اگر میخوای هم فایل ذخیره شه هم دانلود بشه
+        pdfDoc.pipe(fs.createWriteStream(invoicesPath));
+        pdfDoc.pipe(res);
 
-pdfDoc.moveDown();
-pdfDoc.text('----------------------------------------');
-pdfDoc.moveDown();
+        // ===== Title =====
+        pdfDoc
+            .fontSize(24)
+            .text('Invoice', {
+                align: 'center',
+                underline: true
+            });
 
-// ===== Total =====
-pdfDoc
-    .fontSize(18)
-    .text(`Total: $${totalPrice}`, {
-        align: 'right'
-    });
+        pdfDoc.moveDown();
+        pdfDoc.text('----------------------------------------');
+        pdfDoc.moveDown();
 
-pdfDoc.end();
+        let totalPrice = 0;
+
+        // ===== Products =====
+        order.products.forEach(p => {
+
+            const itemTotal = p.quantity * p.product.price;
+            totalPrice += itemTotal;
+
+            pdfDoc
+                .fontSize(14)
+                .text(
+                    `${p.product.title} - ${p.quantity} x $${p.product.price} = $${itemTotal}`
+                );
+
+            pdfDoc.moveDown(0.5);
+        });
+
+        pdfDoc.moveDown();
+        pdfDoc.text('----------------------------------------');
+        pdfDoc.moveDown();
+
+        // ===== Total =====
+        pdfDoc
+            .fontSize(18)
+            .text(`Total: $${totalPrice}`, {
+                align: 'right'
+            });
+
+        pdfDoc.end();
 
     }).catch(err => { return next(err) })
 
