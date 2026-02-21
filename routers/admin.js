@@ -17,5 +17,5 @@ router.post('/editProducts', [
         body('price').isFloat(),
         body('description', 'تعداد کاراکتر های توضیحات حداقل 5 و حداکثر 250 باشد').isLength({ min: 5, max: 250 }).trim()
 ], isAuth, adminController.postEditProduct)
-router.post('/deleteProducts', isAuth, adminController.postDeleteProduct)
+router.delete('/products/:productId', isAuth, adminController.DeleteProduct)
 module.exports = router

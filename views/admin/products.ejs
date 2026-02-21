@@ -19,12 +19,11 @@
                   </span>
                   <br>
                   <div class="text-center">
-                    
-                    <form action="/admin/deleteProducts" method="post">
-                      <a href="/admin/editProducts/<%= product._id %>?edit=true" class="btn btn-primary">ویرایش</a>
+                    <a href="/admin/editProducts/<%= product._id %>?edit=true" class="btn btn-primary">ویرایش</a>
+                    <!-- <form action="/admin/deleteProducts" method="post"> -->
                       <input type="hidden" name="productId" value="<%= product._id %>">
-                      <button class="btn btn-danger" type="submit">حذف</button>
-                    </form>
+                      <button class="btn btn-danger" onclick="deleteProdduct(this)" type="button">حذف</button>
+                    <!-- </form> -->
                   </div>
                 </div>
               </article>
