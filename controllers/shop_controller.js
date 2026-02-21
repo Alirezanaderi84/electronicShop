@@ -5,7 +5,11 @@ const parseCookies = require('../util/cookieParser')
 const path = require('path')
 const fs = require('fs')
 const pdfDocument = require('pdfkit')
+const zarinPalCheck=require('zarinpal-checkout')
+const { response } = require('express')
+
 const ITEMS_PER_PAGE = 8
+var zarinPal=zarinPalCheck.create('b3d828ce-d90e-47e1-839f-656e34af8681',true)
 
 exports.getIndex = (req, res) => {
     const page = +req.query.page || 1
@@ -121,6 +125,92 @@ exports.postCartDeleteProducts = (req, res) => {
         })
 
 }
+exports.getCheckOut= async(req,res)=>{
+     const userProducts = await req.user.populate('cart.items.productId')
+     const products=userProducts.cart.items
+     let totalPrice=0
+     products.forEach(p=>{
+        totalPrice += p.quantity*p.productId.price
+     })
+    res.render('shop/checkout', {
+        pageTitle: 'چک پرداخت',
+        path: '/checkout',
+        products: userProducts.cart.items,
+        isAuthenticateed: req.session.isLoggedIn,
+        totalSum:totalPrice
+    })
+}
+exports.getPayment= async(req,res)=>{
+     const userProducts = await req.user.populate('cart.items.productId')
+     const products=userProducts.cart.items
+     let totalPrice=0
+     products.forEach(p=>{
+        totalPrice += p.quantity*p.productId.price
+     })
+     zarinPal.PaymentRequest({
+        Amount:totalPrice,
+        CallbackURL:'http://localhost:3001/checkPayment',
+        Description:'نست درگاه پرداخت',
+        Email:userProducts.email,
+        Mobile:'09300000000'
+     }).then(response=>{
+        console.log(response);
+        
+       res.redirect(response.url)
+     }).catch(err=>{
+        console.log(err);
+        
+     })
+
+}
+exports.checkPayment=async (req,res)=>{
+     const userProducts = await req.user.populate('cart.items.productId')
+     const products=userProducts.cart.items
+     let totalPrice=0
+     products.forEach(p=>{
+        totalPrice += p.quantity*p.productId.price
+     })
+    const Authority=req.query.Authority
+    const Status=req.query.Status
+    if(Status=='OK'){
+         zarinPal.PaymentVerification({
+            Amount:totalPrice,
+            Authority:Authority,
+         }).then(response=>{
+            console.log(response.refId);
+            req.user.populate('cart.items.productId')
+        .then(user => {
+            const products = user.cart.items.map(i => {
+                return {
+                    quantity: i.quantity,
+                    product: { ...i.productId._doc }
+                }
+            });
+            const order = new Order({
+                user: {
+                    email: req.user.email,
+                    userId: req.user
+                },
+                products: products
+            })
+            return order.save();
+
+        }).then(() => {
+            return req.user.clearCart()
+        }).then(() => {
+            req.flash('refId',response.refId)
+            res.redirect('/orders')
+        }).catch(err => {
+            const error = new Error(err)
+            error.httpStatusCode = 500
+            return next(error)
+        })
+  
+    })
+}else if(Status=='NOK'){
+    res.redirect('/cart')
+}
+}
 exports.postOrder = (req, res) => {
     req.user.populate('cart.items.productId')
         .then(user => {
@@ -160,7 +250,8 @@ exports.getOrder = (req, res) => {
             pageTitle: ' سفارشات',
             path: '/orders',
             orders: orders,
-            isAuthenticateed: req.session.isLoggedIn
+            isAuthenticateed: req.session.isLoggedIn,
+            refId:req.flash('refId')[0]
         })
     }).catch(err => {
         const error = new Error(err)

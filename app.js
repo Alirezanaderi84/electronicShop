@@ -6,8 +6,11 @@ const session = require('express-session')
 const multer = require('multer')
 const MongoDBstore = require('connect-mongo').default
 const flash = require('connect-flash')
-const PORT = 3001
-const MongoDBuri = 'mongodb://localhost/electronicalShop'
+require('dotenv').config()
+let host=process.env.HOST
+let port=process.env.PORT
+let databaseName=process.env.MONGONAME
+const MongoDBuri = `mongodb://${host}/${databaseName}`
 const User = require('./models/user')
 const app = express()
 app.set("view engine", "ejs")
@@ -89,8 +92,8 @@ app.use((error, req, res, next) => {
 mongoose.connect(MongoDBuri).then(result => {
 
 
-  app.listen(PORT, () => {
-    console.log(`runinig on port ${PORT}`)
+  app.listen(port, () => {
+    console.log(`runinig on port ${port}`)
   })
 }
 ).catch(err => console.log(err))

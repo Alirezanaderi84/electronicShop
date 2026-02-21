@@ -1,6 +1,15 @@
 <%- include('../includes/head.ejs') %>
     <%- include('../includes/heading.ejs') %>
         <main>
+            <% if(refId){ %>
+                <div  class="alert alert-success text-center" role="alert">
+                    <h4 > سفازش با موفقیت ثبت شد
+                       ,  شماره تراکنش:<%=refId %>
+                    </h4>
+                </div>
+
+
+                <% } %>
             <% if(orders.length>0) { %>
                 <ul style="list-style-type: none; ">
                     <% orders.forEach(order=>{ %>

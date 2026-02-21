@@ -1,0 +1,31 @@
+<%- include('../includes/head.ejs') %>
+    <%- include('../includes/heading.ejs') %>
+        <main>
+            <ul class="cart__item-list">
+                <% products.forEach(p=> { %>
+                    <li class="cart__item">
+                        <div>
+                            <img src="/<%= p.productId.imageUrl %>" class="img-thumbnail" alt="" />
+                        </div>
+                        <h1 class="fw-bold">
+                            <%= p.productId.title %>
+                        </h1>
+                        <h2 class="text-primary">
+                            تعداد: <%= p.quantity %>
+                        </h2>
+                    </li>
+                    <% }) %>
+            </ul>
+
+
+            <div class="text-center">
+                <h2> مبلغ نهایی:<%=totalSum.toLocaleString('fa-IR') %> تومان
+                </h2>
+            </div>
+            <div class="text-center">
+                <a class="btn btn-success" href="/paymentRequest">پرداخت</a>
+            </div>
+
+
+        </main>
+        <%- include('../includes/end.ejs') %>
